@@ -4,7 +4,7 @@
   "description": "api para aplicacion de unias en neiva colombia",
   "main": "index.js",
   "directories": {
-    "test": "test",
+    "test": "npm run lint && SET NODE_ENV=dev && mocha --timeout 2000 --exit",
     "lint": "standard --fix --verbose"
   },
   "scripts": {
@@ -22,7 +22,8 @@
   ],
   "standard": {
     "ignore": [
-      "node_modules"
+      "node_modules/",
+      "test/"
     ]
   },
   "author": "ces1508 <ces1508@gmail.com>",
@@ -37,6 +38,7 @@
     "rethinkdbdash": "^2.3.31"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "standard": "^12.0.1"
   }

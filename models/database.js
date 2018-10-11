@@ -1,17 +1,21 @@
-const r = require('rethinkdbdash')()
+const r = require('rethinkdbdash')({
+  host: 'localhost',
+  port: 28015,
+  db: 'toctocnails'
+})
 
 class Database {
   async saveEmployed (data) {
     try {
       let newEmployed = await r.table('employes').insert(data)
-      return this.getEmployed(newEmployed.generate_keys[0])
+      return this.getEmployed(newEmployed.generated_keys[0])
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_EMPLOYED', message: e.message }
     }
   }
   async getEmployed (id) {
     try {
-      let employed = await r.table('employes').get(id).whiout('salt', 'password')
+      let employed = await r.table('employes').get(id).without('salt')
       return employed
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'GETING_EMPLOYED', message: e.message }
