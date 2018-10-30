@@ -3,9 +3,13 @@ const bodyParser = require('body-parser')
 const app = express()
 const EmployesRouter = require('./routers/employes')
 const clientsRouter = require('./routers/clients')
+const servicesRouter = require('./routers/services')
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }))
+
 app.use('/employes', EmployesRouter)
 app.use('/clients', clientsRouter)
+app.use('/services', servicesRouter)
 app.listen(300, err => {
   if (err) return process.exitCode(1)
   console.log('server running in port 300')
