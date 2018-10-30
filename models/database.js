@@ -4,6 +4,12 @@ const r = require('rethinkdbdash')({
   db: 'toctocnails'
 })
 
+const r2 = require('rethinkdbdash')({
+  host: 'localhost',
+  port: 28015,
+  db: 'toctocnails'
+})
+
 class Database {
   async saveEmployed (data) {
     try {
@@ -77,6 +83,39 @@ class Database {
       return employes
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'LISTING EMPLOYES', message: e.message }
+    }
+  }
+  // async crateClient (data) {
+  //   try {
+  //     let client = await r.table('clients').create(data)
+  //     client = await await r2.table('clienst').get(client.generated_keys[0])
+  //     return client
+  //   } catch (e) {
+  //     return { error: true, code: 'ERROR DATABASE', action: 'CREATING_CLIENT', message: e.message }
+  //   }
+  // }
+  async clientList (skip, limit, filter = {}) {
+    try {
+      let clients = await r2.table('clients').filter({}).skip(skip).limit(limit)
+      return clients
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'LISTING_CLIENTS', message: e.message }
+    }
+  }
+  async createService (data) {
+    try {
+      let service = await r.table('services').create(data)
+      return await r2.table('services').get(service.generated_keys[0])
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'CREATING_SERVICE', message: e.message }
+    }
+  }
+  async listOfServices (skip, limit) {
+    try {
+      let services = await r.table('services').skip(skip).limit(limit)
+      return services
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'CREATING_SERVICE', message: e.message }
     }
   }
 }
