@@ -1,4 +1,7 @@
 const crypto = require('crypto')
+const path = require('path')
+const fs = require('fs')
+const { validationResult } = require('express-validator/check')
 
 const encrytpPassword = async (txt, salt = null) => {
   if (!salt) {
@@ -13,6 +16,27 @@ const encrytpPassword = async (txt, salt = null) => {
   })
 }
 
+const validateData = async (req, res, next) => {
+  let errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    if (req.file) {
+      await removePicture(req.file.filename)
+    }
+    return res.status(422).json({ errors: errors.array() })
+  }
+  next()
+}
+
+const removePicture = (src) => {
+  return new Promise((resolve, reject) => {
+    fs.unlink(path.resolve('./uploads', src), err => {
+      if (err) return reject(new Error(err.message))
+      return resolve(true)
+    })
+  })
+}
 module.exports = {
-  encrytpPassword
+  encrytpPassword,
+  validateData,
+  removePicture
 }

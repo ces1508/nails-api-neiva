@@ -104,18 +104,43 @@ class Database {
   }
   async createService (data) {
     try {
-      let service = await r.table('services').create(data)
+      let service = await r.table('services').insert(data)
       return await r2.table('services').get(service.generated_keys[0])
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_SERVICE', message: e.message }
     }
   }
+  static async getServiceByName (name) {
+    try {
+      let service = await r2.table('services').getAll(name, { index: 'name' })
+      return service
+    } catch (e) {
+      return { error: true, code: 'ERROR_DATABASE', action: 'GETING_SERVICE_BY_NAME', message: e.message }
+    }
+  }
   async listOfServices (skip, limit) {
     try {
-      let services = await r.table('services').skip(skip).limit(limit)
+      let services = await r2.table('services').orderBy('name').skip(skip).limit(limit)
       return services
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_SERVICE', message: e.message }
+    }
+  }
+  async updateService (id, data) {
+    try {
+      let service = await r.table('services').get(id).update(data)
+      return service
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'UPDATE_SERVICE', message: e.message }
+    }
+  }
+  async destroyService (id) {
+    try {
+      let currentService = await r2.table('services').get(id)
+      let service =  await r.table('services').get(id).delete()
+      return { service, currentService }
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'DESTORY_SERVICE', message: e.message }
     }
   }
 }
