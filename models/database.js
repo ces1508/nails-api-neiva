@@ -163,6 +163,14 @@ class Database {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_ADMIN', message: e.message }
     }
   }
+  async getAdmin (id) {
+    try {
+      let admin = await r.table('admins').get(id).without('password', 'salt')
+      return admin
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_ADMIN', message: e.message }
+    }
+  }
 }
 
 module.exports = Database
