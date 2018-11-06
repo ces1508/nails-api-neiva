@@ -29,7 +29,6 @@ const createSecureAdmin = async (req, res) => {
     createdAt: new Date()
   }
   let newAdmin = await database.createAdmin(admin)
-  console.log(newAdmin)
   if (newAdmin.error) {
     if (newAdmin.code === 'ADMIN ALREADY EXITS') return res.status(400).json({ error: true, message: 'admin already exits, please go to login' })
     return res.status(500).json({ error: true, message: 'we have problems, please try later' })
