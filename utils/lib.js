@@ -2,7 +2,8 @@ const crypto = require('crypto')
 const path = require('path')
 const fs = require('fs')
 const { validationResult } = require('express-validator/check')
-
+const jwt = require('jsonwebtoken')
+const SECRET = process.env.SECRET_TOKEN || '123123'
 const encrytpPassword = async (txt, salt = null) => {
   if (!salt) {
     salt = await crypto.randomBytes(50)
@@ -35,8 +36,18 @@ const removePicture = (src) => {
     })
   })
 }
+
+const createToken = (payload) => {
+  return new Promise((resolve, reject) => {
+    jwt.sign(payload, SECRET, { expiresIn: '1d' }, (err, token) => {
+      if (err) return reject(new Error(err))
+      resolve(token)
+    })
+  })
+}
 module.exports = {
   encrytpPassword,
   validateData,
-  removePicture
+  removePicture,
+  createToken
 }

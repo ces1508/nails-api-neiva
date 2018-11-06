@@ -137,10 +137,30 @@ class Database {
   async destroyService (id) {
     try {
       let currentService = await r2.table('services').get(id)
-      let service =  await r.table('services').get(id).delete()
+      let service = await r.table('services').get(id).delete()
       return { service, currentService }
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'DESTORY_SERVICE', message: e.message }
+    }
+  }
+  // validate authentifaction
+  async findAdminByEmail (email) {
+    try {
+      let admin = await r2.table('admins').getAll(email, { index: 'email' })
+      return admin[0]
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'FINDING_ADMIN', message: e.message }
+    }
+  }
+
+  async createAdmin (data) {
+    try {
+      let exitsAdmin = await this.findAdminByEmail(data.email)
+      if (exitsAdmin) return { error: true, code: 'ADMIN ALREADY EXITS', action: 'CREATING_ADMIN', message: 'el correo ya se encuentra en uso, por favor intenta iniciar sesion' }
+      let newAdmin = await r.table('admins').insert(data)
+      return newAdmin
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'CREATING_ADMIN', message: e.message }
     }
   }
 }
