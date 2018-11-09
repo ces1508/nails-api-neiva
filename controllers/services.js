@@ -23,7 +23,9 @@ const update = async (req, res) => {
   let { id } = req.params
   let data = req.body
   if (data !== {}) {
+    console.log(id, data)
     let service = await db.updateService(id, data)
+    console.log('service', service)
     if (service.error) return res.status(500).json({ error: true, message: 'we have porblems, please try later' })
     if (service.replaced >= 1) return res.status(200).json({ status: 'ok', message: 'service updated sucessfully' })
     if (service.skipped >= 1) return res.status(404).json({ error: true, message: 'service not found' })
@@ -39,7 +41,7 @@ const destroy = async (req, res) => {
     return res.status(500).json({ error: true, message: 'we have problems, please try later' })
   }
   if (action.service.skipped > 0) return res.status(404).json({ error: true, message: 'we cant find the service' })
-  if (action.deleted > 0) {
+  if (action.service.deleted > 0) {
     try {
       await removePicture(action.currentService.picture)
     } catch (e) {

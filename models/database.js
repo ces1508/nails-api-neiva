@@ -50,9 +50,8 @@ class Database {
   }
   async employedAlreadyExits (data) {
     try {
-      let exitisEmail = await this.usernameAlreadyExitis(data.username)
       let cedula = await r.table('employes').getAll(data.cedula, { index: 'cedula' }).count()
-      return exitisEmail > 0 || cedula > 0
+      return cedula > 0
     } catch (e) {
       console.log(e)
       return true
@@ -161,6 +160,14 @@ class Database {
       return newAdmin
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_ADMIN', message: e.message }
+    }
+  }
+  async getAdmin (id) {
+    try {
+      let admin = await r.table('admins').get(id).without('password', 'salt')
+      return admin
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_ADMIN', message: e.message }
     }
   }
 }

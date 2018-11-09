@@ -1,13 +1,9 @@
 const router = require('express').Router()
-const { check, validationResult } = require('express-validator/check')
+const { check } = require('express-validator/check')
 const actions = require('../controllers/employes')
-
-const handleErros = (req, res, next) => {
-  const errors = validationResult(req)
-  if (errors.isEmpty()) return next()
-  res.json(errors.array())
-}
-
+const { validateData } = require('../utils/lib')
+const Db = require('../models/database')
+const Datasource = new Db()
 router.get('/', actions.list)
 router.post('/', [
   check('username').isEmail(),
@@ -16,6 +12,11 @@ router.post('/', [
   check('comuna').isNumeric({ min: 1 }),
   check('cedula').isNumeric(),
   check('phone').isNumeric(),
+  check('username').custom(async (value, { req }) => {
+    let exitsEmail = await Datasource.usernameAlreadyExitis(value)
+    if (exitsEmail > 0) throw new Error('username already exits')
+    return true
+  }),
   check('geo_position').custom((value, { req }) => {
     if (typeof req.body.geo_position !== 'object') {
       throw new Error('you need send a object with the properties lat: float, long: float')
@@ -25,11 +26,12 @@ router.post('/', [
     }
     return true
   })
-], handleErros, actions.createEmployed)
+], validateData, actions.createEmployed)
 
 router.get('/search/:username', [
   check('username').isEmail()
-], handleErros, actions.findUsername)
+], validateData, actions.findUsername)
 
-router.delete('/:id', [check('id').isUUID(4)], handleErros, actions.destroy)
+router.delete('/:id', [check('id').isUUID(4)], validateData, actions.destroy)
+router.patch('/:id', actions.update)
 module.exports = router
