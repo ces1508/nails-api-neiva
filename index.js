@@ -33,7 +33,7 @@ app.use(bodyParser.json())
 app.use(cors(corsOption))
 app.use('/employes', passport.authenticate('jwt', { session: false }), EmployesRouter)
 app.use('/clients', passport.authenticate('jwt', { session: false }), clientsRouter)
-app.use('/services', passport.authenticate('jwt', { session: false }) ,servicesRouter)
+app.use('/services', passport.authenticate('jwt', { session: false }), servicesRouter)
 app.use('/', rootRouter)
 app.listen(300, err => {
   if (err) return process.exitCode(1)

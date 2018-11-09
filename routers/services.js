@@ -42,7 +42,7 @@ router.post('/', upload.single('picture'), [
   next()
 }, create)
 
-router.patch('/:id', [
+router.patch('/:id', upload.single('picture'), [
   body('name').isString().optional().trim(),
   body('price').isNumeric().optional(),
   body('name').custom(value => {

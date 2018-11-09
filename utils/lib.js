@@ -23,7 +23,7 @@ const validateData = async (req, res, next) => {
     if (req.file) {
       await removePicture(req.file.filename)
     }
-    return res.status(422).json({ errors: errors.array() })
+    return res.status(422).json({ error: errors.array() })
   }
   next()
 }

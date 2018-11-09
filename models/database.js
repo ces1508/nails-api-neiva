@@ -50,9 +50,8 @@ class Database {
   }
   async employedAlreadyExits (data) {
     try {
-      let exitisEmail = await this.usernameAlreadyExitis(data.username)
       let cedula = await r.table('employes').getAll(data.cedula, { index: 'cedula' }).count()
-      return exitisEmail > 0 || cedula > 0
+      return cedula > 0
     } catch (e) {
       console.log(e)
       return true

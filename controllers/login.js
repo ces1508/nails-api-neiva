@@ -6,16 +6,16 @@ const login = async (req, res) => {
   let data = req.body
   let { email, password } = data
   let admin = await database.findAdminByEmail(email)
-  if (!admin) return res.status(400).json({ error: true, code: 'BAD CREDENTIALS', message: 'incorret username or password' })
+  if (!admin) return res.status(400).json({error: { code: 'BAD CREDENTIALS', message: 'bad username or password' }})
   let encodePassword = await encrytpPassword(password, admin.salt)
   if (admin.password === encodePassword.encode) {
     let token = await createToken({
       email: admin.email,
       id: admin.id
     })
-    return res.status(201).send(token)
+    return res.status(201).json({ token })
   }
-  res.status(400).send('bad credentials')
+  res.status(400).json({error: { code: 'BAD CREDENTIALS', message: 'bad username or password' }})
 }
 
 const createSecureAdmin = async (req, res) => {

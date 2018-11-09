@@ -9,7 +9,7 @@ const createEmployed = async (req, res, next) => {
   let securePassword = null
   data.cedula = parseInt(data.cedula)
   let verifyExitis = await db.employedAlreadyExits(data)
-  if (verifyExitis) return res.status(400).json({ error: true, message: 'the employed already exits' })
+  if (verifyExitis) return res.status(400).json({ error: { message: 'the employed already exits' } })
   data.password = generator.generate({ length: 8, numbers: true, symbols: true })
   data.defualtPassword = true
   try {
@@ -20,7 +20,7 @@ const createEmployed = async (req, res, next) => {
   data.password = securePassword.encode
   data.salt = securePassword.salt
   let employed = await db.saveEmployed(data)
-  if (employed.error) return res.status(500).json({ error: true, message: 'we have problems, pleaasy try later' })
+  if (employed.error) return res.status(500).json({ error: { message: 'we have problems, please try later' } })
   res.status(201).json(employed)
 }
 
@@ -76,11 +76,23 @@ const confirmPassword = async (req, res, next) => {
   if (employed.password === encode) return next()
   res.status(400).json({ error: true, message: 'we canft find validate your password' })
 }
+
+const update = async (req, res, next) => {
+  let { id } = req.params
+  let data = req.body
+  if (data.id) delete data.id
+  if (data.password) delete data.password
+  if (data.salt) delete data.salt
+  let employed = await db.updateEmployed(id, data)
+  if (employed.error) return res.status(400).json({ error: { message: 'we have problmes, please try latter', fullError: employed.error } })
+  res.json({ status: 'updated' })
+}
 module.exports = {
   createEmployed,
   findUsername,
   destroy,
   list,
   changePassword,
-  confirmPassword
+  confirmPassword,
+  update
 }

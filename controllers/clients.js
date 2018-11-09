@@ -13,8 +13,8 @@ const create = async (req, res) => {
 const list = async (req, res) => {
   try {
     let { skip = 0, limit = 25 } = req.query
-    let clients = await db.clientList(skip, limit)
-    res.json({ data: clients })
+    let data = await db.clientList(parseInt(skip), parseInt(limit))
+    res.json(data)
   } catch (e) {
     res.status(500).json({ error: true })
   }
