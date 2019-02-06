@@ -1,30 +1,11 @@
 const router = require('express').Router()
 const multer = require('multer')
-const uuid = require('uuid-base62')
-const extension = require('file-extension')
 const { body, param } = require('express-validator/check')
-const path = require('path')
 const { create, list, update, destroy } = require('../controllers/services')
 const Database = require('../models/database')
-const { validateData } = require('../utils/lib')
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/')
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${uuid.v4()}.${extension(file.originalname)}`)
-  }
-})
-const fileFilter = (req, file, cb) => {
-  const fileTypes = /jpg|jpeg|png/
-  let mimetype = fileTypes.test(file.mimetype)
-  let extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
-  if (mimetype && extname) {
-    return cb(null, true)
-  }
-  cb(null, false)
-}
-const upload = multer({ storage, fileFilter })
+const { validateData, handleFileStorage, handleFileFilter } = require('../utils/lib')
+
+const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
 
 router.get('/', list)
 router.post('/', upload.single('picture'), [

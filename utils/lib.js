@@ -4,6 +4,10 @@ const fs = require('fs')
 const { validationResult } = require('express-validator/check')
 const jwt = require('jsonwebtoken')
 const SECRET = process.env.SECRET_TOKEN || '123123'
+const multer = require('multer')
+const uuid = require('uuid-base62')
+const extension = require('file-extension')
+
 const encrytpPassword = async (txt, salt = null) => {
   if (!salt) {
     salt = await crypto.randomBytes(50)
@@ -45,9 +49,31 @@ const createToken = (payload) => {
     })
   })
 }
+
+const handleFileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/')
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${uuid.v4()}.${extension(file.originalname)}`)
+  }
+})
+
+const handleFileFilter = (req, file, cb) => {
+  const fileTypes = /jpg|jpeg|png/
+  let mimetype = fileTypes.test(file.mimetype)
+  let extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
+  if (mimetype && extname) {
+    return cb(null, true)
+  }
+  cb(null, false)
+}
+
 module.exports = {
   encrytpPassword,
   validateData,
   removePicture,
-  createToken
+  createToken,
+  handleFileFilter,
+  handleFileStorage
 }

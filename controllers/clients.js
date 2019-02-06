@@ -1,7 +1,8 @@
 const { validationResult } = require('express-validator/check')
 const Database = require('../models/database')
-
+const csv = require('csv-express')
 const db = new Database()
+
 const create = async (req, res) => {
   let errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -12,14 +13,23 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    let { skip = 0, limit = 25 } = req.query
-    let data = await db.clientList(parseInt(skip), parseInt(limit))
+    let data = await db.getAllClients()
     res.json(data)
   } catch (e) {
     res.status(500).json({ error: true })
   }
 }
+const exportToExcel = async (req, res) => {
+  let data = await db.getAllClients()
+  if (req.query.csv) {
+    res.setHeader('Content-Disposition', 'attachment; filename=cients.csv')
+    res.setHeader('Content-Type', 'text/csv')
+    return res.csv(data)
+  }
+  res.xls('clients.xlsx', data)
+}
 module.exports = {
   create,
-  list
+  list,
+  exportToExcel
 }

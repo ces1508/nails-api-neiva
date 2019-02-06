@@ -170,6 +170,54 @@ class Database {
       return { error: true, code: 'ERROR DATABASE', action: 'GETING_ADMIN', message: e.message }
     }
   }
+  async getAllClients () {
+    try {
+      let clients = await r.table('clients')
+      return clients
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_CLIENTS', message: e.message }
+    }
+  }
+  async createDecoration (data) {
+    try {
+      let create = await r.table('decorations').insert(data)
+      return create
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'CREATING_DECORATION', message: e.message }
+    }
+  }
+  async getDecorationByTitle (title) {
+    try {
+      let decorations = await r.table('decorations').filter(r.row('title').match(`(?i)^${title}`))
+      return decorations
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_DECORATIONS_BY_TITLE', message: e.message }
+    }
+  }
+  async getDecorationsList (skip = 1, limit = 25) {
+    try {
+      let decorations = await r.table('decorations').skip(parseInt(skip)).limit(parseInt(limit))
+      return decorations
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_DECORATIONS', message: e.message }
+    }
+  }
+  async getDecoration (id) {
+    try {
+      let decoration = await r.table('decorations').get(id)
+      return decoration
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_SINGLE_DECORATION', message: e.message }
+    }
+  }
+  async destroyDecoration (id) {
+    try {
+      await r.table('decorations').get(id).delete(id)
+      return true
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_SINGLE_DECORATION', message: e.message }
+    }
+  }
 }
 
 module.exports = Database

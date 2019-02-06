@@ -35,11 +35,13 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
+    "csv-express": "^1.2.2",
     "express": "^4.16.4",
     "express-validator": "^5.3.0",
     "file-extension": "^4.0.5",
     "generate-password": "^1.4.0",
     "imagemagick": "^0.1.3",
+    "json2xls": "^0.1.2",
     "jsonwebtoken": "^8.3.0",
     "multer": "^1.4.1",
     "passport": "^0.4.0",
