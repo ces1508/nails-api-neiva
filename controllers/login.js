@@ -15,7 +15,7 @@ const login = async (req, res) => {
     })
     return res.status(201).json({ token })
   }
-  res.status(400).json({error: { code: 'BAD CREDENTIALS', message: 'bad username or password' }})
+  res.status(400).json({ status: 'error', code: 'BAD CREDENTIALS', message: 'bad username or password' })
 }
 
 const createSecureAdmin = async (req, res) => {

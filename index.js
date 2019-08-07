@@ -33,6 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(json2xls.middleware)
 app.use(cors(corsOption))
+app.use('/images', express.static('uploads'))
 
 app.use('/employes', passport.authenticate('jwt', { session: false }), EmployesRouter)
 app.use('/clients', passport.authenticate('jwt', { session: false }), clientsRouter)
