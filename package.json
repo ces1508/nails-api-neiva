@@ -4,10 +4,11 @@
   "description": "api para aplicacion de unias en neiva colombia",
   "main": "index.js",
   "directories": {
-    "test": "npm run lint && SET NODE_ENV=dev && mocha --timeout 2000 --exit",
-    "lint": "standard --fix --verbose"
+    "test": "npm run lint && SET NODE_ENV=dev && mocha --timeout 2000 --exit"
   },
   "scripts": {
+    "lint": "standard --fix --verbose",
+    "start": "npm run lint && node ./index",
     "test": "mocha"
   },
   "repository": {

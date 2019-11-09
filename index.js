@@ -1,18 +1,20 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const app = express()
+const passport = require('passport')
+const json2xls = require('json2xls')
+const cors = require('cors')
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
+
 const EmployesRouter = require('./routers/employes')
 const clientsRouter = require('./routers/clients')
 const servicesRouter = require('./routers/services')
 const decorationRouter = require('./routers/decorations')
 const rootRouter = require('./routers/login')
-const cors = require('cors')
-const JwtStrategy = require('passport-jwt').Strategy
-const ExtractJwt = require('passport-jwt').ExtractJwt
 const Db = require('./models/database')
-const passport = require('passport')
+
+const app = express()
 const DataSource = new Db()
-const json2xls = require('json2xls')
 
 let options = {}
 options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
