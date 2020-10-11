@@ -3,14 +3,24 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const json2xls = require('json2xls')
 const cors = require('cors')
+const fs = require('fs')
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
+
+const uploadFolderExits = fs.existsSync('uploads')
+
+if (!uploadFolderExits) {
+  fs.mkdir('./uploads', err => {
+    if (err) throw err
+  })
+}
 
 const EmployesRouter = require('./routers/employes')
 const clientsRouter = require('./routers/clients')
 const servicesRouter = require('./routers/services')
 const decorationRouter = require('./routers/decorations')
 const rootRouter = require('./routers/login')
+const ordersRouter = require('./routers/orders')
 const Db = require('./models/database')
 
 const app = express()
@@ -39,6 +49,7 @@ app.use(cors(corsOption))
 app.use('/employes', passport.authenticate('jwt', { session: false }), EmployesRouter)
 app.use('/clients', passport.authenticate('jwt', { session: false }), clientsRouter)
 app.use('/services', passport.authenticate('jwt', { session: false }), servicesRouter)
+app.use('/orders', passport.authenticate('jwt', { session: false }), ordersRouter)
 app.use('/decorations', decorationRouter)
 app.use('/', rootRouter)
 

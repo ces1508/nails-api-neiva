@@ -218,6 +218,38 @@ class Database {
       return { error: true, code: 'ERROR DATABASE', action: 'GETING_SINGLE_DECORATION', message: e.message }
     }
   }
+  async getOrdersByState (state = 'pending', skip = 0, limit = 25) {
+    try {
+      const orders = await r2.table('reservations').getAll(state, { index: 'state' }).map(row => {
+        return {
+          id: row('id'),
+          address: row('address'),
+          createdAt: row('createdAt'),
+          time: row('hour'),
+          state: row('state'),
+          services: row('services').map(item => {
+            return {
+              service: r2.table('services').get(item('id')),
+              quantity: item('cant')
+            }
+          }),
+          client: r2.table('clients').get(row('userId'))
+        }
+      }
+      ).skip(skip).limit(limit)
+      return orders
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETING_ALL_ORDERS', message: e.message }
+    }
+  }
+  async updateOrderState (id, state) {
+    try {
+      const updatedOrder = await r.table('reservations').get(id).update({ state })
+      return updatedOrder
+    } catch (e) {
+      return { error: { code: 'DATABASE_ERROR', action: 'GETING_LIST_DECORATIONS', message: e.message } }
+    }
+  }
 }
 
 module.exports = Database
