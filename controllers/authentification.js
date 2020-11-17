@@ -1,7 +1,7 @@
+const passport = require('passport')
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const Db = require('../models/database')
-const passport = require('passport')
 const DataSource = new Db()
 
 let options = {}

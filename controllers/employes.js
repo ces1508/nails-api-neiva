@@ -17,6 +17,9 @@ const createEmployed = async (req, res, next) => {
   } catch (e) {
     return res.status(500).json({ error: true, message: 'we haave problems to securizate your password' })
   }
+  if (req.file) {
+    data.picture = req.file.filename
+  }
   data.password = securePassword.encode
   data.salt = securePassword.salt
   let employed = await db.saveEmployed(data)

@@ -1,11 +1,20 @@
 const router = require('express').Router()
+const multer = require('multer')
 const { check } = require('express-validator/check')
 const actions = require('../controllers/employes')
-const { validateData } = require('../utils/lib')
+const {
+  validateData,
+  handleFileFilter,
+  handleFileStorage
+} = require('../utils/lib')
 const Db = require('../models/database')
+
 const Datasource = new Db()
+const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
+
 router.get('/', actions.list)
-router.post('/', [
+router.post('/',  upload.single('picture'),
+[
   check('username').isEmail(),
   check('firstName').isString(),
   check('lastName').isString(),
