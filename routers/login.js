@@ -7,8 +7,8 @@ router.post('/login', [
   check('email').isEmail(),
   check('password').isString()
 ], validateData, login)
-router.post('/defualtAdmin', [
-  check('email').isEmail(),
-  check('password').isString()
-], validateData, createSecureAdmin)
+// router.post('/defualtAdmin', [
+//   check('email').isEmail(),
+//   check('password').isString()
+// ], validateData, createSecureAdmin)
 module.exports = router
