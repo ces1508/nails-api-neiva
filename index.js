@@ -15,6 +15,7 @@ const Db = require('./models/database')
 
 const app = express()
 const DataSource = new Db()
+const APP_PORT = process.env.PORT
 
 let options = {}
 options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -42,7 +43,7 @@ app.use('/services', passport.authenticate('jwt', { session: false }), servicesR
 app.use('/decorations', decorationRouter)
 app.use('/', rootRouter)
 
-app.listen(300, err => {
+app.listen(APP_PORT, err => {
   if (err) return process.exitCode(1)
   console.log('server running in port 300')
 })
