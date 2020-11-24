@@ -15,7 +15,7 @@ const Db = require('./models/database')
 
 const app = express()
 const DataSource = new Db()
-const APP_PORT = process.env.PORT
+const APP_PORT = process.env.PORT || 300
 
 let options = {}
 options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()

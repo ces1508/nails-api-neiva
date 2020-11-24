@@ -1,17 +1,17 @@
 const r = require('rethinkdbdash')({
-  host: process.env.DB_URL,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER_FULL,
-  password: process.env.DB_PASSWORD_FULL,
-  db: process.env.DB_NAME
+  host: 'localhost',
+  port: 28015,
+  // user: process.env.DB_USER_FULL,
+  // password: process.env.DB_PASSWORD_FULL,
+  db: process.env.DB_NAME || 'toctocnails'
 })
 
 const r2 = require('rethinkdbdash')({
-  host: process.env.DB_URL,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  db: process.env.DB_NAME
+  host: 'localhost',
+  port: 28015,
+  // user: process.env.DB_USER,
+  // password: process.env.DB_PASSWORD,
+  db: process.env.DB_NAME || 'toctocnails'
 })
 
 class Database {

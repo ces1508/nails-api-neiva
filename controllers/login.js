@@ -3,6 +3,7 @@ const Db = require('../models/database')
 const database = new Db()
 
 const login = async (req, res) => {
+  console.log('asdasdasd')
   let data = req.body
   let { email, password } = data
   let admin = await database.findAdminByEmail(email)
