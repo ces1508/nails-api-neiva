@@ -26,13 +26,7 @@ router.post('/', upload.single('picture'), [
 router.patch('/:id', upload.single('picture'), [
   body('name').isString().optional().trim(),
   body('price').isNumeric().optional(),
-  body('name').custom(value => {
-    return Database.getServiceByName(value).then(services => {
-      if (services.length > 0) {
-        return Promise.reject(new Error('service already exits'))
-      }
-    })
-  })
+  body('name').isString()
 ], validateData, update)
 router.delete('/:id', [
   param('id').isUUID(4)
