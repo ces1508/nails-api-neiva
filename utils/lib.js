@@ -69,11 +69,16 @@ const handleFileFilter = (req, file, cb) => {
   cb(null, false)
 }
 
+function calculeTotalPages (quantity, rowsPerPage) {
+  return parseInt((quantity / rowsPerPage) + 1)
+}
+
 module.exports = {
   encrytpPassword,
   validateData,
   removePicture,
   createToken,
   handleFileFilter,
-  handleFileStorage
+  handleFileStorage,
+  calculeTotalPages
 }

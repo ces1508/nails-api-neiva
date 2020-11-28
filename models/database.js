@@ -129,6 +129,14 @@ class Database {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_SERVICE', message: e.message }
     }
   }
+  async getTotalServices () {
+    try {
+      const total = await r2.table('services').count()
+      return total
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GET_TOTAL_SERVICES', message: e.message }
+    }
+  }
   async updateService (id, data) {
     try {
       let service = await r.table('services').get(id).update(data)

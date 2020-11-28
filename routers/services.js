@@ -1,13 +1,15 @@
 const router = require('express').Router()
 const multer = require('multer')
-const { body, param } = require('express-validator/check')
+const { body, param, query, check } = require('express-validator/check')
 const { create, list, update, destroy } = require('../controllers/services')
 const Database = require('../models/database')
 const { validateData, handleFileStorage, handleFileFilter } = require('../utils/lib')
 
 const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
 
-router.get('/', list)
+router.get('/', [
+  check('page').isNumeric().optional,
+],  list)
 router.post('/', upload.single('picture'), [
   body('name').exists().exists(),
   body('price').exists().isNumeric(),

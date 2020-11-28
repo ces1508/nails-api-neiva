@@ -1,5 +1,6 @@
 const Database = require('../models/database')
 const { removePicture } = require('../utils/lib')
+const { calculeTotalPages } = require('../utils/lib')
 const db = new Database()
 
 const create = async (req, res) => {
@@ -13,17 +14,18 @@ const create = async (req, res) => {
 }
 
 const list = async (req, res) => {
-  let { limit = 20, skip = 0 } = req.params
+  let { limit = 1, skip = 0 } = req.params
   let services = await db.listOfServices(skip, limit)
+  const totalServices = await db.getTotalServices()
+  const pages = calculeTotalPages(totalServices, limit)
   if (services.error) return res.status(500).json({ error: true, message: 'we have porblems, please try later' })
-  res.json(services)
+  res.json({services, pages })
 }
 
 const update = async (req, res) => {
   let { id } = req.params
   let data = req.body
   if (data !== {}) {
-    console.log(id, data)
     let service = await db.updateService(id, data)
     console.log('service', service)
     if (service.error) return res.status(500).json({ error: true, message: 'we have porblems, please try later' })
