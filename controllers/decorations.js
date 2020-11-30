@@ -1,6 +1,5 @@
-const Db = require('../models/database')
+const db = require('../models/database')
 const { removePicture } = require('../utils/lib')
-const Datasource = new Db()
 
 const create = async (req, res) => {
   let data = req.body
@@ -11,7 +10,7 @@ const create = async (req, res) => {
     }
   })
   data.photos = photos
-  let create = await Datasource.createDecoration(data)
+  let create = await db.createDecoration(data)
   if (create.error) return res.status(500).json({ error: true, message: 'we have problems, please tray later' })
   res.status(201).json({ status: 'created' })
 }
@@ -20,9 +19,9 @@ const list = async (req, res) => {
   let decorations = []
   let { skip, title } = req.query
   if (title) {
-    decorations = await Datasource.getDecorationByTitle(title)
+    decorations = await db.getDecorationByTitle(title)
   } else {
-    decorations = await Datasource.getDecorationsList(skip, 20)
+    decorations = await db.getDecorationsList(skip, 20)
   }
   if (decorations.error) return res.status(500).json({ error: true, message: 'we have problems, please tray later' })
   res.status(200).json({ data: decorations })
@@ -31,8 +30,8 @@ const list = async (req, res) => {
 const destroy = async (req, res) => {
   try {
     let { id } = req.params
-    let decoration = await Datasource.getDecoration(id)
-    let action = await Datasource.destroyDecoration(id)
+    let decoration = await db.getDecoration(id)
+    let action = await db.destroyDecoration(id)
     if (action.error) return res.status(500).json({ error: true, message: 'we have problems, please tray later' })
     let photos = decoration.photos.map(pic => {
       return removePicture(pic.name)

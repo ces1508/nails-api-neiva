@@ -1,7 +1,6 @@
 const { validationResult } = require('express-validator/check')
-const Database = require('../models/database')
+const db = require('../models/database')
 // const csv = require('csv-express')
-const db = new Database()
 
 const create = async (req, res) => {
   let errors = validationResult(req)

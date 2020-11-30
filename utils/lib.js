@@ -69,8 +69,14 @@ const handleFileFilter = (req, file, cb) => {
   cb(null, false)
 }
 
-function calculeTotalPages (quantity, rowsPerPage) {
-  return parseInt((quantity / rowsPerPage) + 1)
+function paginate (quantity, rowsPerPage, currentPage) {
+  const pages = parseInt((quantity / rowsPerPage) + 1)
+  const skip = (currentPage - 1) * rowsPerPage
+  return {
+    pages,
+    skip,
+    limit: rowsPerPage
+  }
 }
 
 module.exports = {
@@ -80,5 +86,5 @@ module.exports = {
   createToken,
   handleFileFilter,
   handleFileStorage,
-  calculeTotalPages
+  calculeTotalPages: paginate
 }

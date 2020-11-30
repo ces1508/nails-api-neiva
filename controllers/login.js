@@ -1,6 +1,5 @@
 const { createToken, encrytpPassword } = require('../utils/lib')
-const Db = require('../models/database')
-const database = new Db()
+const database = require('../models/database')
 
 const login = async (req, res) => {
   console.log('asdasdasd')

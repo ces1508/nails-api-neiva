@@ -7,9 +7,8 @@ const {
   handleFileFilter,
   handleFileStorage
 } = require('../utils/lib')
-const Db = require('../models/database')
+const db = require('../models/database')
 
-const Datasource = new Db()
 const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
 
 router.get('/', actions.list)
@@ -22,7 +21,7 @@ router.post('/', upload.single('picture'),
     check('cedula').isNumeric(),
     check('phone').isNumeric(),
     check('username').custom(async (value, { req }) => {
-      let exitsEmail = await Datasource.usernameAlreadyExitis(value)
+      let exitsEmail = await db.usernameAlreadyExitis(value)
       if (exitsEmail > 0) throw new Error('username already exits')
       return true
     }),

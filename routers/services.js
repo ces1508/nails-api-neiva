@@ -1,20 +1,18 @@
 const router = require('express').Router()
 const multer = require('multer')
-const { body, param, query, check } = require('express-validator/check')
+const { body, param } = require('express-validator/check')
 const { create, list, update, destroy } = require('../controllers/services')
-const Database = require('../models/database')
+const db = require('../models/database')
 const { validateData, handleFileStorage, handleFileFilter } = require('../utils/lib')
 
 const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
 
-router.get('/', [
-  check('page').isNumeric().optional,
-],  list)
+router.get('/', validateData,  list)
 router.post('/', upload.single('picture'), [
   body('name').exists().exists(),
   body('price').exists().isNumeric(),
   body('name').custom(value => {
-    return Database.getServiceByName(value).then(services => {
+    return db.getServiceByName(value).then(services => {
       if (services.length > 0) {
         return Promise.reject(new Error('service already exits'))
       }
@@ -33,4 +31,6 @@ router.patch('/:id', upload.single('picture'), [
 router.delete('/:id', [
   param('id').isUUID(4)
 ], validateData, destroy)
+
+
 module.exports = router

@@ -97,6 +97,32 @@ class Database {
   //     return { error: true, code: 'ERROR DATABASE', action: 'CREATING_CLIENT', message: e.message }
   //   }
   // }
+  async createCategory (name, image) {
+    try {
+      const category  = await r.table('categories').insert({ name, image })
+      return category
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'CREATING CATEGORY', message: e.message }
+    }
+  }
+
+  async getAllCategories () {
+    try {
+      const categories = await r.table('categories')
+      return categories
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'GETTING CATEGORIES', message: e.message }
+    }
+  }
+
+  async updateCategory (category_id, name, image) {
+    try {
+      const category = await r.table('categories').get(category_id).update({ name, image })
+      return category
+    } catch (e) {
+      return { error: true, code: 'ERROR DATABASE', action: 'UPDATE SINGLE CATEGORY', message: e.message }
+    }
+  }
   async clientList (skip, limit, filter = {}) {
     try {
       let clients = await r2.table('clients').filter({}).skip(skip).limit(limit)
@@ -113,7 +139,7 @@ class Database {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING_SERVICE', message: e.message }
     }
   }
-  static async getServiceByName (name) {
+  async getServiceByName (name) {
     try {
       let service = await r2.table('services').getAll(name, { index: 'name' })
       return service
@@ -132,6 +158,7 @@ class Database {
   async getTotalServices () {
     try {
       const total = await r2.table('services').count()
+      console.log('total')
       return total
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'GET_TOTAL_SERVICES', message: e.message }
@@ -232,4 +259,4 @@ class Database {
   }
 }
 
-module.exports = Database
+module.exports = new Database()

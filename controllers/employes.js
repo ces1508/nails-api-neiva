@@ -1,8 +1,6 @@
-const Database = require('../models/database')
+const db = require('../models/database')
 const { encrytpPassword } = require('../utils/lib')
 const generator = require('generate-password')
-
-const db = new Database()
 
 const createEmployed = async (req, res, next) => {
   let data = req.body

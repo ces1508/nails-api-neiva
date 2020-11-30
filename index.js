@@ -10,11 +10,11 @@ const EmployesRouter = require('./routers/employes')
 const clientsRouter = require('./routers/clients')
 const servicesRouter = require('./routers/services')
 const decorationRouter = require('./routers/decorations')
+const CategoriesRouter = require('./routers/categories')
 const rootRouter = require('./routers/login')
-const Db = require('./models/database')
+const db = require('./models/database')
 
 const app = express()
-const DataSource = new Db()
 const APP_PORT = process.env.PORT || 300
 
 let options = {}
@@ -22,7 +22,7 @@ options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
 options.secretOrKey = process.env.SECRET_TOKEN || '123123'
 
 passport.use(new JwtStrategy(options, async (payload, done) => {
-  let admin = await DataSource.getAdmin(payload.id)
+  let admin = await db.getAdmin(payload.id)
   if (admin.error) return done(true, false)
   if (admin) {
     return done(null, admin)
@@ -40,7 +40,8 @@ app.use(cors(corsOption))
 app.use('/employes', passport.authenticate('jwt', { session: false }), EmployesRouter)
 app.use('/clients', passport.authenticate('jwt', { session: false }), clientsRouter)
 app.use('/services', passport.authenticate('jwt', { session: false }), servicesRouter)
-app.use('/decorations', decorationRouter)
+app.use('/decorations', passport.authenticate('jwt', { session: false }), decorationRouter)
+app.use('/categories', passport.authenticate('jwt', { session: false }), CategoriesRouter)
 app.use('/', rootRouter)
 
 app.listen(APP_PORT, err => {
