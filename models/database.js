@@ -1,8 +1,8 @@
 const r = require('rethinkdbdash')({
   host: 'localhost',
   port: 28015,
-  // user: process.env.DB_USER_FULL,
-  // password: process.env.DB_PASSWORD_FULL,
+  user: process.env.DB_USER_FULL,
+  password: process.env.DB_PASSWORD_FULL,
   db: process.env.DB_NAME || 'toctocnails'
 })
 
