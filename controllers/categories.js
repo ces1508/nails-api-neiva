@@ -36,8 +36,6 @@ const update = async (req, res) => {
     status = 500
     response = { error: true, code: category.action }
   }
-  console.log(category)
-  console.log(name, image)
   if (category.replaced !== 1) {
     status = 400
     response = { error: true, code: 'ERROR_UPDATING_CATEGORY', message: 'ocurrio un error editando la categoria' }

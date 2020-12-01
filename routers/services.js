@@ -11,6 +11,7 @@ router.get('/', validateData,  list)
 router.post('/', upload.single('picture'), [
   body('name').exists().exists(),
   body('price').exists().isNumeric(),
+  body('categoryId').isUUID(4).withMessage('debes enviar una categoria valida'),
   body('name').custom(value => {
     return db.getServiceByName(value).then(services => {
       if (services.length > 0) {
@@ -26,7 +27,8 @@ router.post('/', upload.single('picture'), [
 router.patch('/:id', upload.single('picture'), [
   body('name').isString().optional().trim(),
   body('price').isNumeric().optional(),
-  body('name').isString()
+  body('name').isString(),
+  body('categoryId').isUUID(4).withMessage('debes enviar una categoria valida'),
 ], validateData, update)
 router.delete('/:id', [
   param('id').isUUID(4)

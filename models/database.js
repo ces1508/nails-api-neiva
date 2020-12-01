@@ -57,7 +57,6 @@ class Database {
       let cedula = await r.table('employes').getAll(data.cedula, { index: 'cedula' }).count()
       return cedula > 0
     } catch (e) {
-      console.log(e)
       return true
     }
   }
@@ -158,7 +157,6 @@ class Database {
   async getTotalServices () {
     try {
       const total = await r2.table('services').count()
-      console.log('total')
       return total
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'GET_TOTAL_SERVICES', message: e.message }
