@@ -15,7 +15,7 @@ const create = async (req, res) => {
 const list = async (req, res) => {
   const { page = 1 } = req.params
   const totalServices = await db.getTotalServices()
-  const { pages, skip, limit } = calculeTotalPages(totalServices, 15, page)
+  const { pages, skip, limit } = calculeTotalPages(totalServices, 150, page)
   let services = await db.listOfServices(skip, limit)
   if (services.error) return res.status(500).json({ error: true, message: 'we have porblems, please try later' })
   res.json({services, pages })
