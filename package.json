@@ -24,7 +24,8 @@
   "standard": {
     "ignore": [
       "node_modules/",
-      "test/"
+      "test/",
+      "mailer"
     ]
   },
   "author": "ces1508 <ces1508@gmail.com>",

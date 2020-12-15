@@ -18,18 +18,22 @@ const list = async (req, res) => {
   const { pages, skip, limit } = calculeTotalPages(totalServices, 150, page)
   let services = await db.listOfServices(skip, limit)
   if (services.error) return res.status(500).json({ error: true, message: 'we have porblems, please try later' })
-  res.json({services, pages })
+  res.json({ services, pages })
 }
 
 const update = async (req, res) => {
   let { id } = req.params
   let data = req.body
   if (data !== {}) {
+    if (req.file) {
+      data.picture = req.file.filename
+    }
     let service = await db.updateService(id, data)
     if (service.error) return res.status(500).json({ error: true, message: 'we have porblems, please try later' })
     if (service.replaced >= 1) return res.status(200).json({ status: 'ok', message: 'service updated sucessfully' })
     if (service.skipped >= 1) return res.status(404).json({ error: true, message: 'service not found' })
   }
+  console.log
   res.status(400).json({ error: true, message: 'we cant update the service' })
 }
 

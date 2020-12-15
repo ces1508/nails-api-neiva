@@ -1,69 +1,38 @@
-"use strict";
-const nodemailer = require("nodemailer");
-const serviceTemplate = require("../mailer/service_confirmation");
-console.log('HOLAAA ', serviceTemplate);
-// async..await is not allowed in global scope, must use a wrapper
-async function main() {
-  // Generate test SMTP service account from ethereal.email
-  // Only needed if you don't have a real mail account for testing
-  let testAccount = await nodemailer.createTestAccount();
+'use strict'
+const nodemailer = require('nodemailer')
+const serviceTemplate = require('../mailer/service_confirmation')
 
-  // create reusable transporter object using the default SMTP transport
+async function sendMail (to, subject, template) {
   let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "", // generated ethereal user
-      pass: "", // generated ethereal password
-    },
-});
+      user: 'toctocnailsnoreplay@gmail.com',
+      pass: 'T0cT0c12345'
+      // user: process.env.USER_MAILER, // generated ethereal user
+      // pass: process.env.PASSWORD_MAILER // generated ethereal password
+    }
+  })
 
-/*   process.env.*/
-const template = serviceTemplate(
-	{
-		name: 'Pedro',
-		direction: 'Calle 100 # 23 - 76',
-		phone: '3001234567',
-		neighborhood: 'New City',
-	},
-	[
-		{ 
-			name: 'Manicure',
-			amount: '3'
-		},
-		{ 
-			name: 'Pedicure',
-			amount: '7'
-		},
-		{ 
-			name: 'juage de cabello',
-			amount: '5'
-		}
-	]
-)
-  // send mail with defined transport object
-let info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <foo@example.com>', // sender address
-    to: "javierking1993@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
+  let info = await transporter.sendMail({
+    from: 'TocTocMailer', // sender address
+    to, // list of receivers
+    subject, // Subject line
     html: template
-    // html body
-});
+  })
 
-console.log("Message sent: %s", info.messageId);
-// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-// Preview only available when sending through an Ethereal account
-console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  return info
 }
 
-main().catch(console.error);
-
+function sendOrderMailer (administrators, order) {
+  const { user, services } = order
+  const subject = 'Ha llegado una nueva orden'
+  const template = serviceTemplate(user, services)
+  return sendMail(administrators, subject, template)
+}
 
 module.exports = {
-
+  sendMail,
+  sendOrderMailer
 }
-  

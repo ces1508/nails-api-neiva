@@ -98,7 +98,7 @@ class Database {
   // }
   async createCategory (name, image) {
     try {
-      const category  = await r.table('categories').insert({ name, image })
+      const category = await r.table('categories').insert({ name, image })
       return category
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'CREATING CATEGORY', message: e.message }
@@ -114,9 +114,9 @@ class Database {
     }
   }
 
-  async updateCategory (category_id, name, image) {
+  async updateCategory (categoryId, name, image) {
     try {
-      const category = await r.table('categories').get(category_id).update({ name, image })
+      const category = await r.table('categories').get(categoryId).update({ name, image })
       return category
     } catch (e) {
       return { error: true, code: 'ERROR DATABASE', action: 'UPDATE SINGLE CATEGORY', message: e.message }

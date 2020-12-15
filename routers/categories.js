@@ -6,10 +6,10 @@ const { handleFileFilter, handleFileStorage, validateData } = require('../utils/
 const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
 
 router.get('/', list)
-router.post('/', upload.single('picture'),[
+router.post('/', upload.single('picture'), [
   body('name').isString()
 ], validateData, create)
-router.put('/:category_id', upload.single('picture'),[
+router.put('/:category_id', upload.single('picture'), [
   body('name').isString()
 ], validateData, update)
 

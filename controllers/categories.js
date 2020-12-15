@@ -1,5 +1,4 @@
 const db = require('../models/database')
-const { removePicture } = require('../utils/lib')
 
 const list = async (req, res) => {
   const categories = await db.getAllCategories()
@@ -24,14 +23,14 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-  const { category_id } = req.params
+  const { categoryId } = req.params
   let { name, image } = req.body
   let status = 200
   let response = { status: 'ok', message: 'se ha modificado la categoria con exito' }
   if (req.file) {
     image = req.file.filename
   }
-  const category = await db.updateCategory(category_id, name, image)
+  const category = await db.updateCategory(categoryId, name, image)
   if (category.error) {
     status = 500
     response = { error: true, code: category.action }

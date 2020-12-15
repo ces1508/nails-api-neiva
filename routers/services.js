@@ -7,7 +7,7 @@ const { validateData, handleFileStorage, handleFileFilter } = require('../utils/
 
 const upload = multer({ storage: handleFileStorage, fileFilter: handleFileFilter })
 
-router.get('/', validateData,  list)
+router.get('/', validateData, list)
 router.post('/', upload.single('picture'), [
   body('name').exists().exists(),
   body('price').exists().isNumeric(),
@@ -28,11 +28,10 @@ router.patch('/:id', upload.single('picture'), [
   body('name').isString().optional().trim(),
   body('price').isNumeric().optional(),
   body('name').isString(),
-  body('categoryId').isUUID(4).withMessage('debes enviar una categoria valida'),
+  body('categoryId').isUUID(4).withMessage('debes enviar una categoria valida')
 ], validateData, update)
 router.delete('/:id', [
   param('id').isUUID(4)
 ], validateData, destroy)
-
 
 module.exports = router
